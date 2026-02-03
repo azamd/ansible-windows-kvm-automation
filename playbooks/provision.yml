@@ -1,0 +1,7 @@
+---
+
+- name: Provision Windows Server VM on KVM
+  hosts: kvm_hosts
+  gather_facts: no
+  roles:
+    - kvm_vm
