@@ -6,6 +6,11 @@
     state: started
     enabled: true
 
+- name: Ensure genisoimage exists
+  ansible.builtin.package:
+    name: genisoimage
+    state: present
+
 - name: Create VM disk if missing
   command: >
    qemu-img create -f qcow2 {{ vm_disk }} {{ vm_disk_volume }}
