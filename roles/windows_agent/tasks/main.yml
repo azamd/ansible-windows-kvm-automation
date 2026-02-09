@@ -1,0 +1,18 @@
+---
+- name: Create temp folder
+  import_tasks: create_folder.yml
+
+- name: Download installer
+  import_tasks: agent_download.yml
+
+- name: Install Agent
+  import_tasks: agent_install.yml
+
+- name: Cleanup installer
+  import_tasks: agent_installer_cleanup.yml
+
+#- name: Verify installation
+ # import_tasks: agent_installed_verify.yml
+
+#- name: Run Agent
+ # import_tasks: agent_run.yml

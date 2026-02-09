@@ -1,1 +1,2 @@
-Windows Server VM Automated Provisioning via Ansible on KVM.
+- Windows Server VM Automated Provisioning via Ansible on KVM.
+- Agent Installation on Windows Server VM via Ansible Role.

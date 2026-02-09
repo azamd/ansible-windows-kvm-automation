@@ -1,0 +1,6 @@
+---
+- name: Create temp folder for Agent installer
+  ansible.windows.win_file:
+    path: "{{ agent_installer_dest }}\\{{ agent_folder }}"
+    state: directory
+

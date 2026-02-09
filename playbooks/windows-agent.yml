@@ -1,0 +1,7 @@
+---
+
+- name: Install Agent on Windows VM
+  hosts: winvm
+  gather_facts: no
+  roles:
+    - windows_agent

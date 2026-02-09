@@ -1,0 +1,44 @@
+---
+
+- name: Ensure libvirtd is running
+  service:
+    name: libvirtd
+    state: started
+    enabled: true
+
+- name: Ensure genisoimage exists
+  ansible.builtin.package:
+    name: genisoimage
+    state: present
+
+- name: Create VM disk if missing
+  command: >
+   qemu-img create -f qcow2 {{ vm_disk }} {{ vm_disk_volume }}
+  args:
+    creates: "{{ vm_disk }}"   
+
+- name: Check if VM already exists
+  command: >
+      virsh dominfo {{ vm_name }}
+  register: vm_check
+  ignore_errors: yes
+
+- name: Generate autounattend.xml from template
+  template:
+     src: templates/autounattend.xml.j2
+     dest: /tmp/autounattend.xml
+
+- name: Build the OEMDRV ISO (The Answer File)
+  command: >
+     genisoimage -output {{ image_path }}/{{ vm_name }}-setup.iso 
+        -volid OEMDRV -joliet -rock /tmp/autounattend.xml
+
+- name: Define the VM in Libvirt
+  community.libvirt.virt:
+     command: define
+     xml: "{{ lookup('template', 'templates/definition.xml.j2') }}"
+
+- name: Start the VM
+  community.libvirt.virt:
+     name: "{{ vm_name }}"
+     state: running

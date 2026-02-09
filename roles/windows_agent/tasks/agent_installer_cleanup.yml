@@ -1,0 +1,6 @@
+---
+- name: Remove Agent installer
+  win_file:
+    path: "{{ agent_installer_dest }}\\{{ agent_folder }}\\{{ agent_msi }}"
+    state: absent
+

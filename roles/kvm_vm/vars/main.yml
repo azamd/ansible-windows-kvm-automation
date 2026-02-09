@@ -10,4 +10,10 @@ vm_network: default
 vm_static_ip: "192.168.70.60"
 vm_gateway: "192.168.70.1"
 vm_dns: "8.8.8.8,8.8.4.4"
-admin_password: "windowsAziz
+admin_password: "windowsAziz"
+
+win_user: "Administrator"
+win_password: "windowsAziz"
+win_connection: winrm
+win_cert_validation: ignore
+win_transport: ntlm

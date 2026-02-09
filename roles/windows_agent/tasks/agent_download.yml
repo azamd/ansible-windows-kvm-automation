@@ -1,0 +1,6 @@
+---
+
+- name: Download Agent installer (msi)
+  win_get_url:
+    url: "{{ agent_download_url }}"
+    dest: "{{ agent_installer_dest }}\\{{ agent_folder }}\\{{ agent_msi }}"

@@ -119,7 +119,7 @@
       <Interfaces>
         <Interface wcm:action="add">
           <Ipv4Settings>
-            <DhcpEnabled>false</DhcpEnabled>
+            <DhcpEnabled>true</DhcpEnabled>
             <Metric>10</Metric>
           </Ipv4Settings>
           <Identifier>Ethernet</Identifier>
@@ -197,7 +197,7 @@
         </Password>
         <Enabled>true</Enabled>
         <LogonCount>3</LogonCount>
-        <Username>Administrator</Username>
+        <Username>{{ win_user }}</Username>
       </AutoLogon>
       
       <!-- Skip all setup screens -->
@@ -223,7 +223,7 @@
       <!-- First logon commands (optional - can be done via Ansible later) -->
       <FirstLogonCommands>
         <SynchronousCommand wcm:action="add">
-          <CommandLine>cmd /c echo Windows Setup Complete</CommandLine>
+          <CommandLine>powershell -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/configure_remoting_for_ansible.ps1'))"</CommandLine>
           <Order>1</Order>
         </SynchronousCommand>
       </FirstLogonCommands>
