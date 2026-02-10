@@ -20,7 +20,6 @@
 #- name: Create VM disk if missing
 # community.libvirt.virt_volume:
 #    name: "{{ vm_disk | basename }}"
-#    pool: "{{ libvirt_pool }}"
 #    capacity: "{{ vm_disk_volume }}"
 #    format: qcow2
 #    state: present 
