@@ -15,7 +15,15 @@
   command: >
    qemu-img create -f qcow2 {{ vm_disk }} {{ vm_disk_volume }}
   args:
-    creates: "{{ vm_disk }}"   
+    creates: "{{ vm_disk }}"  
+
+#- name: Create VM disk if missing
+# community.libvirt.virt_volume:
+#    name: "{{ vm_disk | basename }}"
+#    pool: "{{ libvirt_pool }}"
+#    capacity: "{{ vm_disk_volume }}"
+#    format: qcow2
+#    state: present 
 
 - name: Check if VM already exists
   command: >
@@ -32,6 +40,8 @@
   command: >
      genisoimage -output {{ image_path }}/{{ vm_name }}-setup.iso 
         -volid OEMDRV -joliet -rock /tmp/autounattend.xml
+  #args:
+  #  creates: "{{ image_path }}/{{ vm_name }}-setup.iso"
 
 - name: Define the VM in Libvirt
   community.libvirt.virt:
