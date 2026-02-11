@@ -1,5 +1,23 @@
 ---
+- name: Check Packages
+  import_tasks: packages_precheck.yml
 
-- name: Provision the Windows VM
-  import_tasks: windows_provision.yml
+- name: Create Disk Volume
+  import_tasks: volume_creation.yml
+
+- name: Check VM existence
+  import_tasks: vm_exist_check.yml
+
+- name: Generate autounattend
+  import_tasks: autounattend_gen.yml
+
+- name: Create Answer File ISO
+  import_tasks: build_answer_file_iso.yml
+
+- name: Define VM
+  import_tasks: vm_define.yml
+
+- name: Start VM
+  import_tasks: vm_start.yml
+
 

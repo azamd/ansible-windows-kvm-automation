@@ -1,0 +1,6 @@
+---
+
+- name: Define the VM in Libvirt
+  community.libvirt.virt:
+     command: define
+     xml: "{{ lookup('template', 'templates/definition.xml.j2') }}"

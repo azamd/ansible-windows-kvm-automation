@@ -1,0 +1,7 @@
+---
+
+- name: Check if VM already exists
+  command: >
+      virsh dominfo {{ vm_name }}
+  register: vm_check
+  ignore_errors: yes

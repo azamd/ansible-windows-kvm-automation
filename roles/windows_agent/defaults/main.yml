@@ -1,0 +1,14 @@
+---
+agent:
+  name: "Agent"
+  version: "1.0"
+  installer:
+    url: "some link"
+    dest: "C:\\Temp"
+    filename: "agent.msi"
+  install:
+    state: present
+    arguments: "/quiet"
+    directory: "C:\\Temp\\"
+  cleanup:
+    enabled: true

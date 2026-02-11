@@ -1,0 +1,6 @@
+---
+
+- name: Ensure install directory exists
+  ansible.windows.win_file:
+    path: "{{ agent.install.directory }}"
+    state: directory

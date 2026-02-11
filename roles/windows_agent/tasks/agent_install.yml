@@ -1,11 +1,9 @@
 ---
 
-- name:	Install Agent
-  win_package:
-    path: "{{agent_installer_dest }}\\{{ agent_folder }}\\{{ agent_msi }}"
-    state: present
-    arguments: >
-      /quiet
-      SERVER=127.0.0.1
-      SERVERACTIVE=127.0.0.1
-      HOSTNAME=zabbix_aziz
+- name: Install agent
+  ansible.windows.win_package:
+    path: "{{ agent.installer.dest }}\\{{ agent.installer.filename }}"
+    product_id: "{{ agent.installer.product_id | default(omit) }}"
+    state: "{{ agent.install.state }}"
+    arguments: "{{ agent.install.arguments }} INSTALLDIR=\"{{ agent.install.directory}}\""
+

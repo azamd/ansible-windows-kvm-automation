@@ -1,0 +1,14 @@
+---
+
+- name: Create VM disk if missing
+  community.libvirt.virt_volume:
+     pool: "{{ vm_disk_pool }}"
+     state: present
+     xml: |
+       <volume>
+         <name>{{ vm_disk | basename }}</name>
+         <capacity unit="bytes">{{ vm_disk_volume }}</capacity>
+         <target>
+           <format type="qcow2"/>
+         </target>
+       </volume>

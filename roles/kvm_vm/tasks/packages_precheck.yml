@@ -1,0 +1,12 @@
+---
+
+- name: Ensure libvirtd is running
+  service:
+    name: libvirtd
+    state: started
+    enabled: true
+
+- name: Ensure genisoimage exists
+  ansible.builtin.package:
+    name: genisoimage
+    state: present

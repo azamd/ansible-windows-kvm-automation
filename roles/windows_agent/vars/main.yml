@@ -6,7 +6,3 @@ win_transport: ntlm
 win_cert_validation: ignore
 win_scheme: http
 win_port: 5985
-agent_download_url: "https://cdn.zabbix.com/zabbix/binaries/stable/6.4/6.4.12/zabbix_agent2-6.4.12-windows-amd64-openssl.msi"
-agent_installer_dest: "C:\\Temp"
-agent_folder: "zabbix-dir"
-agent_msi: "zabbix-agent.msi"

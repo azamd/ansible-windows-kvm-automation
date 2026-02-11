@@ -1,7 +1,0 @@
----
-
-- name:	Ensure Agent is running
-  ansible.windows.win_service:
-    name: <agent_name> #to be updated.
-    start_mode: auto
-    state: started

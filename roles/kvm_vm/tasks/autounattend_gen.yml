@@ -1,0 +1,7 @@
+---
+
+
+- name: Generate autounattend.xml from template
+  template:
+     src: templates/autounattend.xml.j2
+     dest: /tmp/autounattend.xml

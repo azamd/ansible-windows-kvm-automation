@@ -1,6 +1,6 @@
 ---
-- name: Remove Agent installer
-  win_file:
-    path: "{{ agent_installer_dest }}\\{{ agent_folder }}\\{{ agent_msi }}"
+- name: Remove installer file
+  ansible.windows.win_file:
+    path: "{{ agent.installer.dest }}\\{{ agent.installer.filename }}"
     state: absent
 

@@ -1,0 +1,8 @@
+---
+
+- name: Build the OEMDRV ISO (The Answer File)
+  command: >
+     genisoimage -output {{ image_path }}/{{ vm_name }}-setup.iso 
+        -volid OEMDRV -joliet -rock /tmp/autounattend.xml
+  args:
+    creates: "{{ image_path }}/{{ vm_name }}-setup.iso"
