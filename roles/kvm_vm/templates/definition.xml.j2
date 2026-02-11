@@ -22,7 +22,7 @@
   <devices>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='{{ vm_disk }}'/>
+      <source file='{{ vm_disk_path }}'/>
       <target dev='vda' bus='virtio'/>
     </disk>
 

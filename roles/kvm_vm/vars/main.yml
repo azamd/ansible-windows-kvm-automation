@@ -1,8 +1,10 @@
-vm_name: windowsAziz
+vm_name: windowsAzizTest
 vm_memory: 8192
 vm_cpu: 4
-vm_disk: /mnt/storage/aziz/windowsAziz.qcow2
-vm_disk_volume: 40G
+vm_disk: windowsAzizTest.qcow2
+vm_disk_volume: 21474836480 #20GB
+vm_disk_pool: aziz_storage
+vm_disk_path: /mnt/storage/aziz/windowsAzizTest.qcow2
 windows_iso: /home/admin/Downloads/Win10_22H2_English_x64v1.iso
 virtio_iso: /home/admin/Downloads/virtio-win-0.1.240.iso
 image_path: /mnt/storage/aziz
