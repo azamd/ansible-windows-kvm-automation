@@ -1,0 +1,12 @@
+license_key: "{{ newrelic_license_key }}"
+log_level: "{{ newrelic_log_level }}"
+
+{% if newrelic_proxy_enabled %}
+proxy: "{{ newrelic_proxy_url }}"
+{% endif %}
+
+custom_attributes:
+{% for k,v in newrelic_custom_attributes.items() %}
+  {{ k }}: "{{ v }}"
+{% endfor %}
+

@@ -1,0 +1,6 @@
+
+- name: Start New Relic service
+  ansible.windows.win_service:
+    name: newrelic-infra
+    start_mode: auto
+    state: started

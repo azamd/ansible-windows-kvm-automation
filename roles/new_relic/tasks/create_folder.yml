@@ -1,0 +1,4 @@
+- name: Ensure Temp folder exists
+  ansible.windows.win_file:
+    path: "C:\\Temp"
+    state: directory

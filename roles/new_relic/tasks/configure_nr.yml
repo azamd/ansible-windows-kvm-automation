@@ -1,0 +1,5 @@
+- name: Render New Relic configuration file
+  ansible.windows.win_template:
+    src: newrelic-infra.yml.j2
+    dest: "{{ newrelic_agent_config_path }}"
+  notify: Restart New Relic service

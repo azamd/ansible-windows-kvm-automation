@@ -1,4 +1,3 @@
----
 win_host: 192.168.122.195
 win_user: Administrator
 win_password: windowsAziz
@@ -6,3 +5,4 @@ win_transport: ntlm
 win_cert_validation: ignore
 win_scheme: http
 win_port: 5985
+

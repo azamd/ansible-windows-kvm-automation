@@ -2,5 +2,5 @@
 
 - name: Download agent installer
   ansible.windows.win_get_url:
-    url: "{{ agent.installer.url }}"
-    dest: "{{ agent.installer.dest }}\\{{ agent.installer.filename }}"
+    url: "{{ installer_url }}"
+    dest: "{{ installer_dest }}\\{{ installer_filename }}"

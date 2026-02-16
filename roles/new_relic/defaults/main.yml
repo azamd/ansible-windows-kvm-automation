@@ -1,0 +1,13 @@
+newrelic_msi_url: "https://download.newrelic.com/infrastructure_agent/windows/newrelic-infra.msi"
+newrelic_msi_path: "C:\\Temp\\newrelic-infra.msi"
+
+newrelic_license_key: ""
+
+newrelic_agent_config_path: "C:\\Program Files\\New Relic\\newrelic-infra\\newrelic-infra.yml"
+newrelic_log_level: "info"
+newrelic_custom_attributes: {}
+
+# Proxy settings (optional)
+newrelic_proxy_enabled: false
+newrelic_proxy_url: ""
+

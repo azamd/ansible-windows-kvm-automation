@@ -1,0 +1,7 @@
+
+- name: Install New Relic via msiexec
+  win_command: >
+    msiexec.exe /i C:\Temp\newrelic-infra.msi /qn
+    GENERATE_CONFIG=true LICENSE_KEY={{ newrelic_license_key }}
+  args:
+    creates: 'C:\Program Files\New Relic\newrelic-infra\newrelic-infra.exe'

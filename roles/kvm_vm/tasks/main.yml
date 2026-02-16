@@ -19,5 +19,3 @@
 
 - name: Start VM
   import_tasks: vm_start.yml
-
-

@@ -1,0 +1,4 @@
+- name: Download New Relic MSI
+  ansible.windows.win_get_url:
+    url: "{{ newrelic_msi_url }}"
+    dest: "{{ newrelic_msi_path }}"

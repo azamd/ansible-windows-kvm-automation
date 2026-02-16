@@ -16,6 +16,3 @@ admin_password: "windowsAziz"
 
 win_user: "Administrator"
 win_password: "windowsAziz"
-win_connection: winrm
-win_cert_validation: ignore
-win_transport: ntlm

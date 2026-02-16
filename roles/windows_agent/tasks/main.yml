@@ -1,5 +1,5 @@
 ---
-- name: Create temp folder
+- name: Ensure installer directory exists
   import_tasks: create_folder.yml
 
 - name: Download installer

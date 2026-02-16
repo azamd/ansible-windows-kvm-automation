@@ -1,0 +1,16 @@
+---
+- name: Ensure installer directory exists
+  import_tasks: create_folder.yml
+
+- name: Download New Relic (msi)
+  import_tasks: download_nr.yml
+
+- name: Install New Relic
+  import_tasks: install_nr.yml
+
+- name: Configure New Relic
+  import_tasks: configure_nr.yml
+
+- name: Start New Relic service
+  import_tasks: start_nr.yml
+

@@ -1,0 +1,9 @@
+ansible_host: "{{ win_host }}"
+ansible_user: "{{ win_user }}"
+ansible_password: "{{ win_password }}"
+ansible_connection: winrm
+ansible_winrm_transport: ntlm
+ansible_winrm_cert_validation: ignore
+ansible_winrm_scheme: http
+ansible_port: 5985
+ansible_become: false

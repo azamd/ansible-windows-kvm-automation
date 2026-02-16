@@ -2,8 +2,6 @@
 
 - name: Install agent
   ansible.windows.win_package:
-    path: "{{ agent.installer.dest }}\\{{ agent.installer.filename }}"
-    product_id: "{{ agent.installer.product_id | default(omit) }}"
-    state: "{{ agent.install.state }}"
-    arguments: "{{ agent.install.arguments }} INSTALLDIR=\"{{ agent.install.directory}}\""
-
+    path: "{{ installer_dest }}\\{{ installer_filename }}"
+    state: present
+    arguments: "{{ arguments | join(' ') }} INSTALLDIR=\"{{ install_dir }}\""
