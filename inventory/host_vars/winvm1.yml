@@ -1,6 +1,6 @@
-ansible_host: 192.168.122.195
-ansible_user: Administrator
-ansible_password: windowsAziz
+ansible_host: "{{ win_host }}"
+ansible_user: "{{ win_user }}"
+ansible_password: "{{ win_password }}"
 ansible_connection: winrm
 ansible_winrm_transport: ntlm
 ansible_winrm_cert_validation: ignore
