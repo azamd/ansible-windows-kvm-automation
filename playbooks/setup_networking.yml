@@ -1,0 +1,6 @@
+---
+- name: Configure Static Networking on Windows VM
+  hosts: winvm1
+  gather_facts: no
+  roles:
+    - windows_network

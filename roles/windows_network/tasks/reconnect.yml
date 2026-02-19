@@ -1,0 +1,20 @@
+---
+- name: Wait for VM to respond on New IP
+  wait_for:
+    host: "{{ static_ip }}"
+    port: 5985
+    state: started
+    delay: 10
+    timeout: 120
+  delegate_to: localhost
+
+- name: Brief pause for WinRM service stability
+  pause:
+    seconds: 5
+
+- name: Update the host to the new IP
+  set_fact:
+    ansible_host: "{{ static_ip }}"
+
+- name: Verify connectivity on the new IP
+  ansible.windows.win_ping:

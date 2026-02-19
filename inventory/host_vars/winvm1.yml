@@ -1,0 +1,9 @@
+ansible_host: 192.168.122.195
+ansible_user: Administrator
+ansible_password: windowsAziz
+ansible_connection: winrm
+ansible_winrm_transport: ntlm
+ansible_winrm_cert_validation: ignore
+ansible_winrm_scheme: http
+ansible_port: 5985
+ansible_become: false

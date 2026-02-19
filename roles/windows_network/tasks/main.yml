@@ -1,0 +1,9 @@
+---
+- name: Apply IP Configuration
+  include_tasks: set_ip.yml
+
+- name: Handle Reconnection
+  include_tasks: reconnect.yml
+  
+- name: Apply DNS Configuration
+  include_tasks: set_dns.yml

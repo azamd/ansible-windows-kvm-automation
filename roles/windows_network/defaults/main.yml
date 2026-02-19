@@ -1,0 +1,8 @@
+
+static_ip: "192.168.122.79"
+prefix_length: 24
+gateway: "192.168.122.1"
+
+dns_servers:
+  - 8.8.8.8
+  - 8.8.4.4
