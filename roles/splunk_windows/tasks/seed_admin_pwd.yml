@@ -1,0 +1,4 @@
+- name: Seed admin credentials
+  ansible.windows.win_template:
+    src: user-seed.conf.j2
+    dest: '{{ splunk_home }}\etc\system\local\user-seed.conf'

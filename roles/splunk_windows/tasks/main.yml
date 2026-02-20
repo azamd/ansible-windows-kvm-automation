@@ -1,0 +1,21 @@
+---
+
+- name: "Splunk | Run Pre-checks"
+  ansible.builtin.include_tasks: splunk_precheck.yml
+
+- name: "Splunk | Download MSI"
+  ansible.builtin.include_tasks: splunk_download.yml
+  when: not splunk_installed
+
+- name: "Splunk | Install Package"
+  ansible.builtin.include_tasks: splunk_install.yml
+  when: not splunk_installed
+
+- name: "Splunk | Seed Admin Password"
+  ansible.builtin.include_tasks: seed_admin_pwd.yml
+
+- name: "Splunk | Start Service"
+  ansible.builtin.include_tasks: splunk_run.yml
+
+- name: "Splunk | Connect to Splunk Cloud"
+  ansible.builtin.include_tasks: splunk_connect.yml

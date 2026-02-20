@@ -1,0 +1,8 @@
+---
+splunk_msi_url: "https://download.splunk.com/products/universalforwarder/releases/9.3.0/windows/splunkforwarder-9.3.0-51ccf43db5bd-x64-release.msi"
+splunk_home: 'C:\Program Files\SplunkUniversalForwarder'
+splunk_temp_dir: 'C:\temp\splunk_install'
+
+splunk_cloud_host: "prd-p-xxxx.splunkcloud.com"
+splunk_indexer_port: 9997
+

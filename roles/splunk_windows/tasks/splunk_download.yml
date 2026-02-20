@@ -1,0 +1,4 @@
+- name: Download Splunk Universal Forwarder MSI
+  ansible.windows.win_get_url:
+    url: "{{ splunk_msi_url }}"
+    dest: 'C:\temp\splunk_install\splunk.msi'

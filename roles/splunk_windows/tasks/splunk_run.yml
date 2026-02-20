@@ -1,0 +1,4 @@
+- name: Ensure Splunk service is started
+  ansible.windows.win_service:
+    name: SplunkForwarder
+    state: started

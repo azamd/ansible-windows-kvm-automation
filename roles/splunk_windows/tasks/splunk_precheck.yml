@@ -1,0 +1,13 @@
+- name: Check if Splunk is already installed
+  ansible.windows.win_service_info:
+    name: SplunkForwarder
+  register: splunk_service
+
+- name: Set installation fact
+  ansible.builtin.set_fact:
+    splunk_installed: "{{ splunk_service.exists }}"
+
+- name: Create temp directory for installation files
+  ansible.windows.win_file:
+    path: 'C:\temp\splunk_install'
+    state: directory

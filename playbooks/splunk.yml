@@ -1,0 +1,7 @@
+---
+- name: Deploy Splunk Universal Forwarder to Windows
+  hosts: winvm
+  gather_facts: yes
+  
+  roles:
+    - splunk_windows

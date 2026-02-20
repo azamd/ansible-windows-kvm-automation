@@ -1,0 +1,18 @@
+- name: Copy Splunk Cloud Credentials package to VM
+  ansible.windows.win_copy:
+    src: files/splunkclouduf.spl
+    dest: 'C:\temp\splunk_install\splunkclouduf.spl'
+
+- name: Install Cloud Credentials App via CLI
+  ansible.windows.win_command:
+    cmd: '"{{ splunk_home }}\bin\splunk.exe" install app C:\temp\splunk_install\splunkclouduf.spl -auth admin:admin'
+  register: cloud_app_result
+  changed_when: "'App installed' in cloud_app_result.stdout"
+  notify: Restart Splunk
+
+- name: Verify connection to Splunk Cloud Ingest Port
+  ansible.windows.win_wait_for:
+    host: "{{ splunk_cloud_host }}"
+    port: 9997
+    state: started
+    timeout: 30
