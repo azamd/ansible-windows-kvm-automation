@@ -19,3 +19,6 @@
 
 - name: "Splunk | Connect to Splunk Cloud"
   ansible.builtin.include_tasks: splunk_connect.yml
+
+- name: "Splunk | Configure Inputs"
+  ansible.builtin.include_tasks: splunk_inputs.yml

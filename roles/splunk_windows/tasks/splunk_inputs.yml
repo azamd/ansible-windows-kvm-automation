@@ -1,0 +1,5 @@
+- name: Set Splunk Inputs for Windows Event Logs
+  ansible.windows.win_template:
+    src: inputs.conf.j2
+    dest: '{{ splunk_home }}\etc\system\local\inputs.conf'
+  notify: Restart Splunk

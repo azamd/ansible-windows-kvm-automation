@@ -1,4 +1,4 @@
-- name: Install Splunk UF MSI
+- name: Install Splunk Universal Forwarder MSI
   ansible.windows.win_package:
     path: 'C:\temp\splunk_install\splunk.msi'
     state: present
@@ -6,3 +6,4 @@
       - /quiet
       - AGREETOLICENSE=Yes
       - LAUNCHSPLUNK=0
+      - MGMT_PORT=8089

@@ -3,11 +3,35 @@
     src: files/splunkclouduf.spl
     dest: 'C:\temp\splunk_install\splunkclouduf.spl'
 
+- name: Clean existing passwd file to reset auth
+  ansible.windows.win_file:
+    path: 'C:\Program Files\SplunkUniversalForwarder\etc\passwd'
+    state: absent
+
+- name: Update User Seed with current password
+  ansible.windows.win_template:
+    src: user-seed.conf.j2
+    dest: 'C:\Program Files\SplunkUniversalForwarder\etc\system\local\user-seed.conf'
+
+- name: Restart Splunk to finalize admin user creation
+  ansible.windows.win_service:
+    name: SplunkForwarder
+    state: restarted
+
+- name: Wait for Splunk to initialize internal database
+  ansible.windows.win_wait_for:
+    path: 'C:\Program Files\SplunkUniversalForwarder\etc\passwd'
+    state: present
+    timeout: 30
+
 - name: Install Cloud Credentials App via CLI
   ansible.windows.win_command:
-    cmd: '"{{ splunk_home }}\bin\splunk.exe" install app C:\temp\splunk_install\splunkclouduf.spl -auth admin:admin'
-  register: cloud_app_result
-  changed_when: "'App installed' in cloud_app_result.stdout"
+    cmd: '"{{ splunk_home }}\bin\splunk.exe" install app C:\temp\splunk_install\splunkclouduf.spl -auth admin:{{ splunk_admin_password }} --no-prompt'
+  register: install_result
+  failed_when: 
+    - install_result.rc != 0 
+    - '"already exists" not in install_result.stderr'
+  changed_when: '"installed" in install_result.stdout'
   notify: Restart Splunk
 
 - name: Verify connection to Splunk Cloud Ingest Port

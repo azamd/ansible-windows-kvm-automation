@@ -1,3 +1,4 @@
+
 - name: Check if Splunk is already installed
   ansible.windows.win_service_info:
     name: SplunkForwarder
