@@ -1,0 +1,4 @@
+---
+- name: Resize cloned disk
+  command: >
+    qemu-img resize {{ vm_disk_path }} {{ vm_disk_size }}

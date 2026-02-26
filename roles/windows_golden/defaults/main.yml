@@ -1,0 +1,13 @@
+vm_name: "windows-10-Testing"
+vm_memory: 8192
+vm_cpu: 4
+vm_disk_size: 60G
+golden_image_path: /mnt/storage1/aziz/windows10-golden.qcow2
+vm_disk_dir: /mnt/storage1/aziz
+os_variant: "win10"
+vm_network: default
+
+
+win_user: "admin"
+win_password: "admin"
+

@@ -1,0 +1,17 @@
+---
+- name: Check golden image exists
+  stat:
+    path: "{{ golden_image_path }}"
+  register: golden_stat
+
+- name: Fail if golden image missing
+  fail:
+    msg: "Golden image not found at {{ golden_image_path }}"
+  when: not golden_stat.stat.exists
+
+- name: Check if VM already defined
+  community.libvirt.virt:
+    name: "{{ vm_name }}"
+    command: status
+  register: vm_status
+  ignore_errors: true

@@ -1,0 +1,5 @@
+---
+- name: Ensure VM is running
+  community.libvirt.virt:
+    name: "{{ vm_name }}"
+    state: running

@@ -1,0 +1,19 @@
+---
+- name: Set VM disk path
+  set_fact:
+    vm_disk_path: "{{ vm_disk_dir }}/{{ vm_name }}.qcow2"
+
+- name: Validate prerequisites
+  include_tasks: validate.yml
+
+- name: Clone disk from golden image
+  include_tasks: clone_disk.yml
+
+- name: Resize disk
+  include_tasks: resize_disk.yml
+
+- name: Define VM
+  include_tasks: define_vm.yml
+
+- name: Start VM
+  include_tasks: start_vm.yml 

@@ -1,0 +1,48 @@
+<domain type='kvm'>
+  <name>{{ vm_name }}</name>
+
+  <memory unit='MiB'>{{ vm_memory }}</memory>
+  <vcpu placement='static'>{{ vm_cpu }}</vcpu>
+
+  <!-- Q35 Chipset -->
+  <os>
+    <type arch='x86_64' machine='q35'>hvm</type>
+    <boot dev='hd'/>
+  </os>
+
+  <features>
+    <acpi/>
+    <apic/>
+    <vmport state='off'/>
+  </features>
+
+  <cpu mode='host-model'/>
+
+  <devices>
+
+    <!-- SATA Disk instead of VirtIO -->
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='{{ vm_disk_path }}'/>
+      <target dev='sda' bus='sata'/>
+    </disk>
+
+    <!-- SATA controller required for Q35 -->
+    <controller type='sata' index='0'/>
+
+    <!-- Network (VirtIO is fine for network even if disk is SATA) -->
+     <interface type='network'>
+      <source network='{{ vm_network }}'/>
+      <model type='virtio'/>
+    </interface>
+
+    <graphics type='vnc' autoport='yes' listen='0.0.0.0'/>
+    <video>
+      <model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1'/>
+    </video>
+
+    <input type='tablet' bus='usb'/>
+    <input type='mouse' bus='ps2'/>
+    <input type='keyboard' bus='ps2'/>
+  </devices>
+</domain>

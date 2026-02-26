@@ -1,0 +1,12 @@
+---
+- name: Create full clone from golden image
+  command: >
+    qemu-img convert
+    -O qcow2
+    -o preallocation=metadata
+    {{ golden_image_path }}
+    {{ vm_disk_path }}
+  args:
+    creates: "{{ vm_disk_path }}"
+  register: clone_result
+  changed_when: clone_result.rc == 0
