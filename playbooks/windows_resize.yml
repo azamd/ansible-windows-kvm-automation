@@ -1,0 +1,8 @@
+---
+
+- name: Resize Windows C Drive
+  hosts: winvm
+  gather_facts: false
+  roles:
+    - win_part_resize
+

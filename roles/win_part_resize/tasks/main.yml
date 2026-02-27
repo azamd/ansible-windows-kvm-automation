@@ -1,0 +1,14 @@
+---
+
+- name: Check if resize needed
+  win_shell: |
+    $current = (Get-Partition -DriveLetter C).Size
+    $max = (Get-PartitionSupportedSize -DriveLetter C).SizeMax
+    if ($current -lt $max) { exit 0 } else { exit 1 }
+  register: resize_check
+  ignore_errors: true
+
+- name: Resize C partition
+  win_shell: |
+    Resize-Partition -DriveLetter C -Size (Get-PartitionSupportedSize -DriveLetter C).SizeMax
+  when: resize_check.rc == 0

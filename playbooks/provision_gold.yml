@@ -1,0 +1,8 @@
+---
+
+- name: Provision Windows Server VM on KVM (Windows 10 Golden Image)
+  hosts: kvm1
+  gather_facts: no
+  roles:
+    - windows_golden
+
