@@ -1,0 +1,3 @@
+---
+# The specific naming convention Windows uses for archived logs
+event_log_archive_pattern: 'Archive-*.evtx'

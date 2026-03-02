@@ -1,0 +1,25 @@
+---
+- name: Identify active Event Log directory from Registry
+  ansible.windows.win_reg_stat:
+    path: HKLM:\System\CurrentControlSet\Services\EventLog\Application
+    name: File
+  register: log_reg_info
+
+- name: Set directory variable based on Registry path
+  ansible.builtin.set_fact:
+    active_log_dir: "{{ log_reg_info.value | win_dirname }}"
+
+- name: Filter for archived logs (Archive-*.evtx)
+  ansible.windows.win_find:
+    paths: "{{ active_log_dir }}"
+    patterns: "{{ event_log_archive_pattern }}"
+    file_type: file
+  register: archived_logs
+
+- name: Provide identification report
+  ansible.builtin.debug:
+    msg: 
+      - "Target Directory: {{ active_log_dir }}"
+      - "Archive Count: {{ archived_logs.matched }}"
+      - "Total Archive Size (Bytes): {{ archived_logs.files | map(attribute='size') | sum }}"
+      - "Files: {{ archived_logs.files | map(attribute='path') | list }}"
