@@ -1,0 +1,12 @@
+- name: Find Splunk log files older than {{ splunk_log_retention_days }} days
+  ansible.windows.win_find:
+    paths: "{{ splunk_log_path }}"
+    patterns: "{{ splunk_log_extensions }}"
+    recurse: true
+    age: "{{ splunk_log_retention_days }}d"
+    age_stamp: mtime
+  register: old_splunk_logs
+
+- name: Display files to be deleted
+  ansible.builtin.debug:
+    msg: "Found {{ old_splunk_logs.files | length }} file(s) to delete older than {{ splunk_log_retention_days }} days"

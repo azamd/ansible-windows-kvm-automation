@@ -1,0 +1,16 @@
+- name: Skip cleanup if no files found
+  ansible.builtin.debug:
+    msg: "No log files older than {{ splunk_log_retention_days }} days found. Skipping cleanup."
+  when: old_splunk_logs.files | length == 0
+
+- name: Remove old Splunk log files
+  ansible.windows.win_file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ old_splunk_logs.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+  when: old_splunk_logs.files | length > 0
+  notify: Log cleanup summary
+
+

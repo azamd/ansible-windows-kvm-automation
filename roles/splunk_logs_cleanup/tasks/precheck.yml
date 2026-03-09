@@ -1,0 +1,13 @@
+- name: Set Splunk log path
+  ansible.builtin.set_fact:
+    splunk_log_path: "{{ splunk_install_path }}\\var\\log\\splunk"
+
+- name: Check if Splunk log directory exists
+  ansible.windows.win_stat:
+    path: "{{ splunk_log_path }}"
+  register: splunk_log_dir
+
+- name: Fail if Splunk log directory does not exist
+  ansible.builtin.fail:
+    msg: "Splunk log directory not found at {{ splunk_log_path }}"
+  when: not splunk_log_dir.stat.exists

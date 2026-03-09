@@ -1,0 +1,4 @@
+---
+- name: Log cleanup summary
+  ansible.builtin.debug:
+    msg: "Splunk log cleanup completed. Removed {{ old_splunk_logs.files | length }} file(s) from {{ splunk_log_path }}"

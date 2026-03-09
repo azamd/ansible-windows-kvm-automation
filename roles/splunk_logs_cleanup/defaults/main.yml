@@ -1,0 +1,6 @@
+splunk_install_path: 'C:\Program Files\SplunkUniversalForwarder'
+splunk_log_retention_days: 3
+splunk_log_extensions:
+  - "*.log"
+  - "*.gz"
+  - "*.tmp"

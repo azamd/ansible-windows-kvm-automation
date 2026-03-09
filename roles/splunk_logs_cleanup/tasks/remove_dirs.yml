@@ -1,0 +1,20 @@
+- name: Find empty subdirectories after cleanup
+  ansible.windows.win_find:
+    paths: "{{ splunk_log_path }}"
+    recurse: true
+    file_type: directory
+  register: splunk_subdirs
+  when: old_splunk_logs.files | length > 0
+
+- name: Remove empty subdirectories
+  ansible.windows.win_file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ splunk_subdirs.files | default([]) }}"
+  loop_control:
+    label: "{{ item.path }}"
+  when:
+    - splunk_subdirs.files is defined
+    - item.path != splunk_log_path
+  ignore_errors: true
+

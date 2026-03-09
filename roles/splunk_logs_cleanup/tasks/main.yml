@@ -1,0 +1,12 @@
+---
+- name: Preflight checks
+  ansible.builtin.import_tasks: precheck.yml
+
+- name: Find old log files
+  ansible.builtin.import_tasks: find_logs.yml
+
+- name: Clean up old log files
+  ansible.builtin.import_tasks: remove_logs.yml
+
+- name: Clean up empty directories
+  ansible.builtin.import_tasks: remove_dirs.yml

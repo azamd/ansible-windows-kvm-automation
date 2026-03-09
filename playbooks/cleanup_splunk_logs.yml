@@ -1,0 +1,6 @@
+---
+- name: Splunk UF Log Cleanup
+  hosts: winvm
+  gather_facts: false
+  roles:
+    - splunk_logs_cleanup
