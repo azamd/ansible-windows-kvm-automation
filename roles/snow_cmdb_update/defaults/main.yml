@@ -1,10 +1,3 @@
----
-
-- name: Send VM facts to ServiceNow CMDB
-  hosts: all
-  gather_facts: false
-
-  vars:
    
     vm_name:              "windows-app-server-01"
     vm_domain:            "corp.example.com"
