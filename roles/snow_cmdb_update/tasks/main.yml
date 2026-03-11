@@ -2,7 +2,7 @@
 
     - name: "Render CMDB payload from template"
       ansible.builtin.template:
-        src: "{{ payload_file }}"
+        src: cmdb_payload.json.j2
         dest: "{{ rendered_file }}"
 
     - name: "Display payload being sent"

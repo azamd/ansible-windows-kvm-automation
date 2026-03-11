@@ -174,8 +174,7 @@
     snow_instance:     "{{ sw_instance }}"
     snow_username:     "{{ sw_username }}"
     snow_password:     "{{ sw_password }}"
-    payload_file:      "/tmp/{{ vm_name }}_cmdb_payload.json"
-    rendered_file:     "/tmp/{{ vm_name }}_cmdb_payload_rendered.json"
+    rendered_file:     "/mnt/storage1/aziz/{{ vm_name }}_cmdb_payload_rendered.json"
 
 
 
