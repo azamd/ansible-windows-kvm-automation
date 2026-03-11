@@ -1,0 +1,29 @@
+
+
+    - name: "Render CMDB payload from template"
+      ansible.builtin.template:
+        src: "{{ payload_file }}"
+        dest: "{{ rendered_file }}"
+
+    - name: "Display payload being sent"
+      ansible.builtin.debug:
+        msg: "{{ lookup('file', rendered_file) | from_json | to_nice_json }}"
+
+    - name: "POST payload to ServiceNow CMDB IRE API"
+      ansible.builtin.uri:
+        url: "{{ snow_instance }}/api/now/identifyreconcile"
+        method: POST
+        user: "{{ snow_username }}"
+        password: "{{ snow_password }}"
+        force_basic_auth: true
+        body_format: json
+        body: "{{ lookup('file', rendered_file) | from_json }}"
+        headers:
+          Content-Type: "application/json"
+          Accept: "application/json"
+        status_code: [200, 201]
+      register: snow_response
+
+    - name: "Show ServiceNow response"
+      ansible.builtin.debug:
+        msg: "{{ snow_response.json | to_nice_json }}"
