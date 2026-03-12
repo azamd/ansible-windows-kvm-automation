@@ -1,0 +1,42 @@
+---
+plugin: servicenow.itsm.now
+
+instance:
+  host: "{{ lookup('env', 'SN_INSTANCE') }}"
+  username: "{{ lookup('env', 'SN_USERNAME') }}"
+  password: "{{ lookup('env', 'SN_PASSWORD') }}"
+
+table: cmdb_ci_win_server
+query_fields:
+  - name
+  - ip_address
+  - fqdn
+  - os
+  - os_version
+  - environment
+  - support_group
+  - owner_team
+
+
+filter_results: "install_status=1^operational_status=1"
+
+
+compose:
+  ansible_host: ip_address
+  ansible_connection: "'winrm'"
+  ansible_winrm_transport: "'ntlm'"
+  ansible_port: "5986"
+
+keyed_groups:
+  - key: environment
+    prefix: env
+    separator: "_"
+  - key: os_version
+    prefix: win
+    separator: "_"
+  - key: owner_team
+    prefix: team
+    separator: "_"
+  - key: support_group
+    prefix: sg
+    separator: "_"
