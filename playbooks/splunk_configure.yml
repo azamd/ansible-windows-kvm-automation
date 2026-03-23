@@ -1,0 +1,98 @@
+---
+- name: Configure Splunk Universal Forwarder on Windows
+  hosts: winvm
+  gather_facts: false
+
+
+  pre_tasks:
+    - name: Verify WinRM connectivity
+      ansible.windows.win_ping:
+
+    - name: "Splunk | Verify SplunkForwarder service exists before configuring"
+      ansible.windows.win_service_info:
+        name: SplunkForwarder
+      register: splunk_service
+
+    - name: "Splunk | Abort if Splunk is not installed"
+      ansible.builtin.assert:
+        that: splunk_service.exists
+        fail_msg: "SplunkForwarder is not installed. Run splunk_install.yml first."
+
+  tasks:
+    # --- Connect to Splunk Cloud ---
+    - name: "Splunk | Copy Splunk Cloud credentials package to VM"
+      ansible.windows.win_copy:
+        src: ../roles/splunk_windows/files/splunkclouduf.spl
+        dest: "{{ splunk_temp_dir }}\\splunkclouduf.spl"
+
+    - name: "Splunk | Clean existing passwd file to reset auth"
+      ansible.windows.win_file:
+        path: "{{ splunk_home }}\\etc\\passwd"
+        state: absent
+
+    - name: "Splunk | Update user-seed with current password"
+      ansible.windows.win_template:
+        src: ../roles/splunk_windows/templates/user-seed.conf.j2
+        dest: "{{ splunk_home }}\\etc\\system\\local\\user-seed.conf"
+      no_log: true
+
+    - name: "Splunk | Restart Splunk to finalize admin user creation"
+      ansible.windows.win_service:
+        name: SplunkForwarder
+        state: restarted
+
+    - name: "Splunk | Wait for Splunk to initialize internal database"
+      ansible.windows.win_wait_for:
+        path: "{{ splunk_home }}\\etc\\passwd"
+        state: present
+        timeout: 30
+
+    - name: "Splunk | Install Cloud credentials app via CLI"
+      ansible.windows.win_command:
+        cmd: '"{{ splunk_home }}\bin\splunk.exe" install app {{ splunk_temp_dir }}\splunkclouduf.spl -auth admin:{{ splunk_admin_password }} --no-prompt'
+      register: install_result
+      failed_when:
+        - install_result.rc != 0
+        - '"already exists" not in install_result.stderr'
+      changed_when: '"installed" in install_result.stdout'
+      no_log: true
+
+    - name: "Splunk | Restart Splunk after cloud app install"
+      ansible.windows.win_service:
+        name: SplunkForwarder
+        state: restarted
+      when: '"installed" in install_result.stdout'
+
+    - name: "Splunk | Verify connection to Splunk Cloud ingest port"
+      ansible.windows.win_wait_for:
+        host: "{{ splunk_cloud_host }}"
+        port: "{{ splunk_indexer_port }}"
+        state: started
+        timeout: 30
+
+    # --- Configure Inputs ---
+    - name: "Splunk | Configure Windows Event Log inputs"
+      ansible.windows.win_template:
+        src: ../roles/splunk_windows/templates/inputs.conf.j2
+        dest: "{{ splunk_home }}\\etc\\system\\local\\inputs.conf"
+      register: inputs_result
+
+    - name: "Splunk | Restart Splunk to apply new inputs"
+      ansible.windows.win_service:
+        name: SplunkForwarder
+        state: restarted
+      when: inputs_result.changed
+
+  post_tasks:
+    - name: "Splunk | Assert SplunkForwarder service is running after configuration"
+      ansible.windows.win_service_info:
+        name: SplunkForwarder
+      register: final_check
+
+    - name: "Splunk | Confirm service is in running state"
+      ansible.builtin.assert:
+        that:
+          - final_check.exists
+          - final_check.services[0].state == "running"
+        fail_msg: "SplunkForwarder service is not running after configuration"
+        success_msg: "SplunkForwarder configured and running successfully"

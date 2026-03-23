@@ -1,0 +1,78 @@
+---
+- name: Install Splunk Universal Forwarder on Windows
+  hosts: winvm
+  gather_facts: false
+
+
+  pre_tasks:
+    - name: Verify WinRM connectivity
+      ansible.windows.win_ping:
+
+  tasks:
+    # --- Precheck ---
+    - name: "Splunk | Check if Splunk is already installed"
+      ansible.windows.win_service_info:
+        name: SplunkForwarder
+      register: splunk_service
+
+    - name: "Splunk | Set installation fact"
+      ansible.builtin.set_fact:
+        splunk_installed: "{{ splunk_service.exists }}"
+
+    - name: "Splunk | Create temp directory for installation files"
+      ansible.windows.win_file:
+        path: "{{ splunk_temp_dir }}"
+        state: directory
+
+    # --- Download ---
+    - name: "Splunk | Download Universal Forwarder MSI"
+      ansible.windows.win_get_url:
+        url: "{{ splunk_msi_url }}"
+        dest: "{{ splunk_temp_dir }}\\splunk.msi"
+      when: not splunk_installed
+
+    # --- Install ---
+    - name: "Splunk | Install Universal Forwarder MSI"
+      ansible.windows.win_package:
+        path: "{{ splunk_temp_dir }}\\splunk.msi"
+        state: present
+        arguments:
+          - /quiet
+          - AGREETOLICENSE=Yes
+          - LAUNCHSPLUNK=0
+          - MGMT_PORT=8089
+      when: not splunk_installed
+
+    # --- Seed admin password ---
+    - name: "Splunk | Seed admin credentials"
+      ansible.windows.win_template:
+        src: ../roles/splunk_windows/templates/user-seed.conf.j2
+        dest: "{{ splunk_home }}\\etc\\system\\local\\user-seed.conf"
+      no_log: true
+      when: not splunk_installed
+
+    # --- Start service ---
+    - name: "Splunk | Ensure Splunk service is started and set to auto"
+      ansible.windows.win_service:
+        name: SplunkForwarder
+        state: started
+        start_mode: auto
+
+    - name: "Splunk | Wait for management port to be available"
+      ansible.windows.win_wait_for:
+        port: 8089
+        timeout: 60
+
+  post_tasks:
+    - name: "Splunk | Assert SplunkForwarder service is running"
+      ansible.windows.win_service_info:
+        name: SplunkForwarder
+      register: final_check
+
+    - name: "Splunk | Confirm service is in running state"
+      ansible.builtin.assert:
+        that:
+          - final_check.exists
+          - final_check.services[0].state == "running"
+        fail_msg: "SplunkForwarder service is not running after installation"
+        success_msg: "SplunkForwarder service is running successfully"
