@@ -1,0 +1,26 @@
+---
+- name: Configure New Relic on Windows
+  hosts: winvm
+  gather_facts: no
+
+  vars:
+    newrelic_license_key: "XXXXXXXXX"
+    newrelic_agent_config_path: "C:\\Program Files\\New Relic\\newrelic-infra\\newrelic-infra.yml"
+    newrelic_log_level: "info"
+    newrelic_custom_attributes: {}
+    # Proxy settings (optional)
+    newrelic_proxy_enabled: false
+    newrelic_proxy_url: ""
+
+  handlers:
+    - name: Restart New Relic service
+      ansible.windows.win_service:
+        name: newrelic-infra
+        state: restarted
+
+  tasks:
+    - name: Render New Relic configuration file
+      ansible.windows.win_template:
+        src: templates/newrelic-infra.yml.j2
+        dest: "{{ newrelic_agent_config_path }}"
+      notify: Restart New Relic service

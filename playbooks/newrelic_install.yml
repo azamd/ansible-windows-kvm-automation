@@ -1,0 +1,101 @@
+---
+- name: Install New Relic on Windows
+  hosts: winvm
+  gather_facts: no
+
+  vars:
+    newrelic_msi_url: "https://download.newrelic.com/infrastructure_agent/windows/newrelic-infra.msi"
+    newrelic_msi_path: "C:\\Temp\\newrelic-infra.msi"
+    newrelic_license_key: "XXXXXXXXX"
+    newrelic_exe_path: "C:\\Program Files\\New Relic\\newrelic-infra\\newrelic-infra.exe"
+
+  tasks:
+
+    # -------------------------
+    # PRE-CHECKS
+    # -------------------------
+
+    - name: "[PRE-CHECK] Check if New Relic executable already exists"
+      ansible.windows.win_stat:
+        path: "{{ newrelic_exe_path }}"
+      register: newrelic_exe
+
+    - name: "[PRE-CHECK] Check if New Relic service already exists"
+      ansible.windows.win_service_info:
+        name: newrelic-infra
+      register: newrelic_service_info
+      ignore_errors: yes
+
+    - name: "[PRE-CHECK] Report - New Relic is already installed, skipping installation"
+      ansible.builtin.debug:
+        msg: "New Relic is already installed on {{ inventory_hostname }}. Skipping installation tasks."
+      when: newrelic_exe.stat.exists
+
+    - name: "[PRE-CHECK] Report - New Relic service status before install"
+      ansible.builtin.debug:
+        msg: "New Relic service state: {{ newrelic_service_info.services[0].state | default('not found') }}"
+      when: newrelic_service_info.services is defined and newrelic_service_info.services | length > 0
+
+    # -------------------------
+    # INSTALLATION
+    # -------------------------
+
+    - name: Ensure Temp folder exists
+      ansible.windows.win_file:
+        path: "C:\\Temp"
+        state: directory
+      when: not newrelic_exe.stat.exists
+
+    - name: Download New Relic MSI
+      ansible.windows.win_get_url:
+        url: "{{ newrelic_msi_url }}"
+        dest: "{{ newrelic_msi_path }}"
+      when: not newrelic_exe.stat.exists
+
+    - name: Install New Relic via msiexec
+      win_command: >
+        msiexec.exe /i C:\Temp\newrelic-infra.msi /qn
+        GENERATE_CONFIG=true LICENSE_KEY={{ newrelic_license_key }}
+      args:
+        creates: "{{ newrelic_exe_path }}"
+      when: not newrelic_exe.stat.exists
+
+    - name: Start New Relic service
+      ansible.windows.win_service:
+        name: newrelic-infra
+        start_mode: auto
+        state: started
+
+    # -------------------------
+    # POST-CHECKS
+    # -------------------------
+
+    - name: "[POST-CHECK] Verify New Relic executable exists after installation"
+      ansible.windows.win_stat:
+        path: "{{ newrelic_exe_path }}"
+      register: newrelic_exe_post
+
+    - name: "[POST-CHECK] Fail if New Relic executable is not found"
+      ansible.builtin.fail:
+        msg: "New Relic installation failed: executable not found at {{ newrelic_exe_path }}"
+      when: not newrelic_exe_post.stat.exists
+
+    - name: "[POST-CHECK] Verify New Relic service is running"
+      ansible.windows.win_service_info:
+        name: newrelic-infra
+      register: newrelic_service_post
+
+    - name: "[POST-CHECK] Fail if New Relic service is not running"
+      ansible.builtin.fail:
+        msg: "New Relic service is not running after installation. Current state: {{ newrelic_service_post.services[0].state }}"
+      when: >
+        newrelic_service_post.services is not defined or
+        newrelic_service_post.services | length == 0 or
+        newrelic_service_post.services[0].state != 'running'
+
+    - name: "[POST-CHECK] Report - New Relic installed and running successfully"
+      ansible.builtin.debug:
+        msg: >
+          New Relic infrastructure agent successfully installed and running on {{ inventory_hostname }}.
+          Service state: {{ newrelic_service_post.services[0].state }}.
+          Start mode: {{ newrelic_service_post.services[0].start_mode }}.
